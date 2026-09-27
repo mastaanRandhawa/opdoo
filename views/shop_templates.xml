@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Strategy: add CrioCo CSS classes via XPath attributes — never replace
+        Odoo's card/detail structure wholesale. Odoo's JS (cart, variants,
+        quick-add, wishlist) depends on specific class names and data-* attributes
+        that live inside these templates. SCSS does all the visual work.
+    -->
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         SHOP LISTING  /shop
+    ══════════════════════════════════════════════════════════════════════════ -->
+
+    <template id="crioco_shop" inherit_id="website_sale.products" name="CrioCo Shop">
+
+        <!-- Mark page so SCSS can scope shop rules without !important wars -->
+        <xpath expr="//div[hasclass('js_sale')]" position="attributes">
+            <attribute name="class" add="crioco-shop" separator=" "/>
+        </xpath>
+
+        <!-- Prepend brand page header as the first child of the product column -->
+        <xpath expr="//div[hasclass('js_sale')]" position="prepend">
+            <div class="crioco-shop__header">
+                <t t-if="search_categories_ids">
+                    <p class="crioco-overline">Collection</p>
+                    <h1 class="crioco-shop__title">
+                        <t t-esc="(category.name if category else 'Our Chocolates')"/>
+                    </h1>
+                </t>
+                <t t-else="">
+                    <p class="crioco-overline">The Full Range</p>
+                    <h1 class="crioco-shop__title">Our Chocolates</h1>
+                </t>
+            </div>
+        </xpath>
+
+    </template>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         PRODUCT CARD  (rendered for every product in the grid)
+    ══════════════════════════════════════════════════════════════════════════ -->
+
+    <template id="crioco_product_item" inherit_id="website_sale.product_item"
+              name="CrioCo Product Card">
+
+        <!-- Hook our class onto the card wrapper Odoo renders -->
+        <xpath expr="//div[hasclass('o_wsale_product_grid_item')]" position="attributes">
+            <attribute name="class" add="crioco-shop-card" separator=" "/>
+        </xpath>
+
+        <!-- Add the public category name as an overline above the product name.
+             product.public_categ_ids is available in the product_item context. -->
+        <xpath expr="//h5[hasclass('o_wsale_product_name')]" position="before">
+            <p class="crioco-product-card__category"
+               t-if="product.public_categ_ids">
+                <t t-esc="product.public_categ_ids[0].name"/>
+            </p>
+        </xpath>
+
+    </template>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         PRODUCT DETAIL  /shop/<slug>
+    ══════════════════════════════════════════════════════════════════════════ -->
+
+    <template id="crioco_product_detail" inherit_id="website_sale.product"
+              name="CrioCo Product Detail">
+
+        <!-- Mark the page wrapper -->
+        <xpath expr="//div[@id='product_detail']" position="attributes">
+            <attribute name="class" add="crioco-product-detail" separator=" "/>
+        </xpath>
+
+        <!-- Mark the image column -->
+        <xpath expr="//div[@id='o_carousel_product']" position="attributes">
+            <attribute name="class" add="crioco-detail-gallery" separator=" "/>
+        </xpath>
+
+        <!-- Mark the info column -->
+        <xpath expr="//div[@id='product_details']" position="attributes">
+            <attribute name="class" add="crioco-detail-info" separator=" "/>
+        </xpath>
+
+        <!-- Add the category overline above the product title -->
+        <xpath expr="//h1[hasclass('product_name')]" position="before">
+            <p class="crioco-overline crioco-detail-category"
+               t-if="product.public_categ_ids">
+                <t t-esc="product.public_categ_ids[0].name"/>
+            </p>
+        </xpath>
+
+        <!--
+            Origin Notes — rendered as a full-width section beneath the
+            main product block (gallery + info row), above any description tabs.
+            Only shown when origin_notes is populated on the product record.
+        -->
+        <xpath expr="//div[@id='product_detail_main']" position="after">
+            <div class="crioco-origin-notes container" t-if="product.origin_notes">
+                <div class="crioco-origin-notes__inner">
+                    <div class="crioco-origin-notes__label">
+                        <p class="crioco-overline">Tasting Notes</p>
+                        <h2 class="crioco-origin-notes__title">
+                            Origin &amp; Character
+                        </h2>
+                    </div>
+                    <div class="crioco-origin-notes__body">
+                        <p t-field="product.origin_notes"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+    </template>
+
+</odoo>

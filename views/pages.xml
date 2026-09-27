@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="homepage" name="CrioCo Homepage">
+        <t t-call="website.layout">
+            <t t-set="head_title">CrioCo | Single-Origin Artisan Chocolate</t>
+            <t t-set="website_meta_description">Premium single-origin chocolate bars, bonbons, and curated gift boxes. Sourced from Ecuador, Madagascar, and Peru.</t>
+
+            <!--
+                ── HERO ────────────────────────────────────────────────────────
+                Full-bleed section. Background image/video is set via the
+                Website Builder's section background editor — click the section
+                in edit mode, open the "Background" panel, and upload a photo or
+                video. The overlay gradient is handled in home.scss.
+            -->
+            <section class="crioco-hero o_cc o_cc1"
+                     data-snippet="s_cover"
+                     data-name="Hero">
+
+                <div class="crioco-hero__overlay">
+                    <div class="container">
+
+                        <div class="crioco-hero__content" data-crioco-fade="true">
+                            <p class="crioco-overline">Artisan Chocolate</p>
+                            <h1 class="crioco-hero__headline">
+                                Wild Chocolate<br/>Through Line
+                            </h1>
+                            <p class="crioco-hero__subhead crioco-lead">
+                                Single-origin bars and bonbons sourced from<br
+                                    class="d-none d-md-inline"/>
+                                the world's most remarkable cacao regions.
+                            </p>
+                            <div class="crioco-hero__actions">
+                                <a href="/shop" class="crioco-btn crioco-btn--primary">
+                                    Shop All Chocolates
+                                </a>
+                                <a href="/box-picks" class="crioco-btn crioco-btn--ghost">
+                                    Build a Box
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </section>
+
+            <!--
+                ── FEATURED PRODUCTS ────────────────────────────────────────────
+                Populated by the controller: products with is_featured=True,
+                ordered by Website Sequence. Falls back to newest 6 if none set.
+            -->
+            <section class="crioco-featured">
+                <div class="container">
+
+                    <div class="crioco-featured__header" data-crioco-fade="true">
+                        <p class="crioco-overline">Our Selection</p>
+                        <h2>Curated Collections</h2>
+                    </div>
+
+                    <div class="crioco-product-grid">
+                        <t t-foreach="featured_products" t-as="product">
+                            <article class="crioco-product-card" data-crioco-fade="true">
+
+                                <a t-attf-href="/shop/#{slug(product)}"
+                                   class="crioco-product-card__media-link"
+                                   t-att-aria-label="product.name">
+                                    <div class="crioco-product-card__media">
+                                        <img t-attf-src="/web/image/product.template/#{product.id}/image_512"
+                                             t-att-alt="product.name"
+                                             loading="lazy"
+                                             width="512"
+                                             height="512"/>
+                                    </div>
+                                </a>
+
+                                <div class="crioco-product-card__info">
+                                    <p class="crioco-product-card__category"
+                                       t-if="product.public_categ_ids">
+                                        <t t-esc="product.public_categ_ids[0].name"/>
+                                    </p>
+                                    <h3 class="crioco-product-card__name">
+                                        <a t-attf-href="/shop/#{slug(product)}"
+                                           t-esc="product.name"/>
+                                    </h3>
+                                    <p class="crioco-product-card__price">
+                                        <span t-field="product.list_price"
+                                              t-options='{"widget": "monetary", "display_currency": website.currency_id}'/>
+                                    </p>
+                                </div>
+
+                                <a t-attf-href="/shop/#{slug(product)}"
+                                   class="crioco-btn crioco-btn--outline crioco-product-card__cta">
+                                    View Product
+                                </a>
+
+                            </article>
+                        </t>
+                    </div>
+
+                    <div class="crioco-featured__footer" data-crioco-fade="true">
+                        <a href="/shop" class="crioco-btn crioco-btn--text">
+                            View All Products &#8594;
+                        </a>
+                    </div>
+
+                </div>
+            </section>
+
+            <!--
+                ── BRAND STORY ──────────────────────────────────────────────────
+                Split layout: text left, image right (reverses on mobile).
+                The image is a Website Builder editable image — replace via edit mode.
+            -->
+            <section class="crioco-story" data-crioco-fade="true">
+                <div class="container">
+                    <div class="crioco-story__grid">
+
+                        <div class="crioco-story__text">
+                            <p class="crioco-overline">The CrioCo Story</p>
+                            <h2 class="crioco-story__heading">
+                                The Explorer.<br/>The Purist.
+                            </h2>
+                            <p class="crioco-story__body">
+                                We travel to origin — the volcanic soils of Ecuador, the river
+                                valleys of Madagascar, the highland forests of Peru — to find
+                                cacao varieties that most chocolatiers never taste. Every bar
+                                we make starts with a single relationship, a single harvest,
+                                a single flavour story.
+                            </p>
+                            <a href="/about" class="crioco-btn crioco-btn--primary">
+                                Our Story
+                            </a>
+                        </div>
+
+                        <div class="crioco-story__media">
+                            <!--
+                                Replace this placeholder with a real image.
+                                In Website Builder edit mode: click the image → Change Image.
+                            -->
+                            <img src="/crioco_theme/static/src/img/story-placeholder.jpg"
+                                 alt="Cacao pods at origin"
+                                 class="crioco-story__img"
+                                 loading="lazy"
+                                 width="640"
+                                 height="760"/>
+                            <div class="crioco-story__img-fallback" aria-hidden="true"/>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!--
+                ── CATEGORY STRIPS ──────────────────────────────────────────────
+                Three cards linking to the main shop categories.
+            -->
+            <section class="crioco-categories" data-crioco-fade="true">
+                <div class="container">
+                    <div class="crioco-categories__grid">
+
+                        <a t-attf-href="/shop?category=#{cat_wild.id if cat_wild else ''}"
+                           class="crioco-cat-card crioco-cat-card--wild">
+                            <div class="crioco-cat-card__overlay">
+                                <p class="crioco-overline">Single Origin</p>
+                                <h3 class="crioco-cat-card__name">Wild Chocolate</h3>
+                            </div>
+                        </a>
+
+                        <a t-attf-href="/shop?category=#{cat_signature.id if cat_signature else ''}"
+                           class="crioco-cat-card crioco-cat-card--signature">
+                            <div class="crioco-cat-card__overlay">
+                                <p class="crioco-overline">Classic Range</p>
+                                <h3 class="crioco-cat-card__name">Signature Bars</h3>
+                            </div>
+                        </a>
+
+                        <a href="/box-picks"
+                           class="crioco-cat-card crioco-cat-card--box">
+                            <div class="crioco-cat-card__overlay">
+                                <p class="crioco-overline">Gift &amp; Selection</p>
+                                <h3 class="crioco-cat-card__name">Box Picks</h3>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+            </section>
+
+            <!--
+                ── NEWSLETTER ───────────────────────────────────────────────────
+                Configure the mailing list: Odoo backend →
+                Email Marketing → Mailing Lists → create "CrioCo Newsletter".
+                Then set the list_id value in the hidden input below.
+            -->
+            <section class="crioco-newsletter">
+                <div class="container">
+                    <div class="crioco-newsletter__inner" data-crioco-fade="true">
+
+                        <p class="crioco-overline">Stay in the Loop</p>
+                        <h2 class="crioco-newsletter__heading">
+                            From Origin to Your Door
+                        </h2>
+                        <p class="crioco-newsletter__sub">
+                            New releases, harvest stories, and exclusive tasting notes —
+                            delivered when they matter.
+                        </p>
+
+                        <form class="crioco-newsletter__form"
+                              method="post"
+                              action="/mailing/subscribe">
+                            <input type="hidden" name="csrf_token"
+                                   t-att-value="request.csrf_token()"/>
+                            <!--
+                                Replace 0 with your actual mailing list id from
+                                Odoo backend → Email Marketing → Mailing Lists.
+                            -->
+                            <input type="hidden" name="list_id" value="0"/>
+                            <div class="crioco-newsletter__field">
+                                <label for="newsletter_email" class="visually-hidden">
+                                    Email address
+                                </label>
+                                <input type="email"
+                                       id="newsletter_email"
+                                       name="email"
+                                       class="crioco-newsletter__input"
+                                       placeholder="Your email address"
+                                       required="required"
+                                       autocomplete="email"/>
+                                <button type="submit" class="crioco-btn crioco-btn--primary">
+                                    Subscribe
+                                </button>
+                            </div>
+                            <p class="crioco-newsletter__note">
+                                No spam. Unsubscribe at any time.
+                            </p>
+                        </form>
+
+                    </div>
+                </div>
+            </section>
+
+        </t>
+    </template>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         BOX PICKS  /box-picks
+         Curated gift box collection page.
+    ══════════════════════════════════════════════════════════════════════════ -->
+
+    <template id="box_picks" name="CrioCo Box Picks">
+        <t t-call="website.layout">
+            <t t-set="head_title">Box Picks | CrioCo Artisan Chocolate</t>
+            <t t-set="website_meta_description">Handpicked curated boxes of CrioCo's finest single-origin chocolates. Perfect gifts for chocolate lovers.</t>
+
+            <section class="crioco-hero crioco-hero--short o_cc o_cc1"
+                     data-snippet="s_cover"
+                     data-name="Box Picks Hero">
+                <div class="crioco-hero__overlay">
+                    <div class="container">
+                        <div class="crioco-hero__content" data-crioco-fade="true">
+                            <p class="crioco-overline">Gift &amp; Selection</p>
+                            <h1 class="crioco-hero__headline">Box Picks</h1>
+                            <p class="crioco-hero__subhead crioco-lead">
+                                Thoughtfully curated boxes of our finest chocolates —
+                                every one a journey to origin.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="crioco-featured">
+                <div class="container">
+
+                    <div class="crioco-product-grid">
+                        <t t-foreach="products" t-as="product">
+                            <article class="crioco-product-card" data-crioco-fade="true">
+
+                                <a t-attf-href="/shop/#{slug(product)}"
+                                   class="crioco-product-card__media-link"
+                                   t-att-aria-label="product.name">
+                                    <div class="crioco-product-card__media">
+                                        <img t-attf-src="/web/image/product.template/#{product.id}/image_512"
+                                             t-att-alt="product.name"
+                                             loading="lazy"
+                                             width="512"
+                                             height="512"/>
+                                    </div>
+                                </a>
+
+                                <div class="crioco-product-card__info">
+                                    <p class="crioco-product-card__category"
+                                       t-if="product.public_categ_ids">
+                                        <t t-esc="product.public_categ_ids[0].name"/>
+                                    </p>
+                                    <h3 class="crioco-product-card__name">
+                                        <a t-attf-href="/shop/#{slug(product)}"
+                                           t-esc="product.name"/>
+                                    </h3>
+                                    <p class="crioco-product-card__price">
+                                        <span t-field="product.list_price"
+                                              t-options='{"widget": "monetary", "display_currency": website.currency_id}'/>
+                                    </p>
+                                </div>
+
+                                <a t-attf-href="/shop/#{slug(product)}"
+                                   class="crioco-btn crioco-btn--outline crioco-product-card__cta">
+                                    View Box
+                                </a>
+
+                            </article>
+                        </t>
+                    </div>
+
+                    <t t-if="not products">
+                        <div class="crioco-empty-state text-center py-5" data-crioco-fade="true">
+                            <p class="crioco-overline">Coming Soon</p>
+                            <h2>Boxes in the Making</h2>
+                            <p>Check back soon for our curated box selections.</p>
+                            <a href="/shop" class="crioco-btn crioco-btn--primary">
+                                Browse All Chocolates
+                            </a>
+                        </div>
+                    </t>
+
+                </div>
+            </section>
+
+        </t>
+    </template>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         404 — branded error page
+    ══════════════════════════════════════════════════════════════════════════ -->
+
+    <template id="crioco_404" inherit_id="website.page_404" name="CrioCo 404">
+        <xpath expr="//section" position="replace">
+            <section class="crioco-404-page">
+                <div class="container text-center">
+                    <p class="crioco-overline">404</p>
+                    <h1 class="crioco-404-page__code">Page Not Found</h1>
+                    <p class="crioco-404-page__msg">
+                        This page has wandered off to a cacao forest somewhere.
+                    </p>
+                    <a href="/" class="crioco-btn crioco-btn--primary">
+                        Back to Home
+                    </a>
+                </div>
+            </section>
+        </xpath>
+    </template>
+
+</odoo>

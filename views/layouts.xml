@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="crioco_layout" inherit_id="website.layout" name="CrioCo Layout">
+
+        <!--
+            1. Tag the header so our SCSS can target it without fighting Bootstrap's
+               specificity. We never touch Odoo's internal navbar structure here —
+               website_sale's cart injection, auth menus, and language selectors all
+               continue to work because those templates inherit this same element.
+        -->
+        <xpath expr="//header[@id='top']" position="attributes">
+            <attribute name="class" add="crioco-navbar" separator=" "/>
+        </xpath>
+
+        <!--
+            2. Replace the logo.
+               Odoo renders <a class="navbar-brand"> with a <img> of website.logo.
+               We replace it with the text wordmark so the design works from day one
+               before a logo image file is uploaded. Swap the <span> for an <img>
+               once you have the SVG/PNG asset.
+        -->
+        <xpath expr="//a[hasclass('navbar-brand')]" position="replace">
+            <a t-attf-href="#{website.homepage_url}"
+               class="navbar-brand crioco-brand"
+               aria-label="CrioCo — home">
+                <span class="crioco-wordmark">CrioCo</span>
+            </a>
+        </xpath>
+
+        <!--
+            3. Replace the footer.
+               Navigation links mirror the website menu so they stay in sync with
+               whatever the editor configures — no hardcoded URLs that drift.
+        -->
+        <xpath expr="//footer[@id='footer']" position="replace">
+            <footer id="footer" class="crioco-footer" data-anchor="true">
+                <div class="container">
+
+                    <div class="crioco-footer__inner">
+
+                        <!-- Brand column -->
+                        <div class="crioco-footer__brand">
+                            <a t-attf-href="#{website.homepage_url}"
+                               class="crioco-wordmark crioco-footer__logo"
+                               aria-label="CrioCo — home">CrioCo</a>
+                            <p class="crioco-footer__tagline">
+                                Sourced from the world's finest cacao regions.
+                            </p>
+                        </div>
+
+                        <!-- Navigation — mirrors header menu -->
+                        <div class="crioco-footer__nav">
+                            <p class="crioco-footer__nav-title">Shop</p>
+                            <ul>
+                                <t t-foreach="website.menu_id.child_id" t-as="item">
+                                    <li>
+                                        <a t-att-href="item.url" t-esc="item.name"/>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+
+                        <!-- Info column -->
+                        <div class="crioco-footer__nav">
+                            <p class="crioco-footer__nav-title">The Brand</p>
+                            <ul>
+                                <li><a href="/about">Our Story</a></li>
+                                <li><a href="/contact">Contact</a></li>
+                                <li><a href="/my/home">My Account</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="crioco-footer__bottom">
+                        <p class="crioco-footer__copy">&#169; 2026 CrioCo. All rights reserved.</p>
+                        <p class="crioco-footer__legal">
+                            <a href="/privacy">Privacy</a>
+                            <a href="/terms">Terms</a>
+                        </p>
+                    </div>
+
+                </div>
+            </footer>
+        </xpath>
+
+    </template>
+
+</odoo>

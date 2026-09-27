@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pot
+.DS_Store
+*.log
+static/src/fonts/

@@ -1,0 +1,154 @@
+// =============================================================================
+// CrioCo — Brand variables
+// Loaded first in the asset bundle (prepended) so Bootstrap SCSS $variables
+// below override Bootstrap's own !default values at compile time.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Livory font — commercial typeface by HvD Fonts (Hannes von Döhren)
+// Place licensed font files in static/src/fonts/:
+//   Livory-Regular.woff2 / .woff
+//   Livory-Italic.woff2  / .woff
+// -----------------------------------------------------------------------------
+@font-face {
+    font-family: 'Livory';
+    src: url('/crioco_theme/static/src/fonts/Livory-Regular.woff2') format('woff2'),
+         url('/crioco_theme/static/src/fonts/Livory-Regular.woff')  format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Livory';
+    src: url('/crioco_theme/static/src/fonts/Livory-Italic.woff2') format('woff2'),
+         url('/crioco_theme/static/src/fonts/Livory-Italic.woff')  format('woff');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+// -----------------------------------------------------------------------------
+// Bootstrap 5 SCSS variable overrides
+// These must be set before Bootstrap's own variables.scss compiles.
+// All Bootstrap variables use !default, so setting them here without !default
+// wins at the SCSS merge step.
+// -----------------------------------------------------------------------------
+
+// Color palette
+$crioco-cocoa-900: #2C1810;
+$crioco-cocoa-700: #5C3317;
+$crioco-cocoa-500: #8B5E3C;
+$crioco-cocoa-300: #C4956A;
+$crioco-cream-100: #F5F0E8;
+$crioco-cream-200: #EDE4D3;
+$crioco-gold-400:  #C9A84C;
+$crioco-gold-600:  #9E7B28;
+
+// Bootstrap semantic overrides
+$primary:       $crioco-cocoa-700;
+$secondary:     $crioco-gold-400;
+$body-bg:       $crioco-cream-100;
+$body-color:    $crioco-cocoa-900;
+$link-color:    $crioco-cocoa-700;
+$link-hover-color: $crioco-gold-400;
+$border-color:  $crioco-cream-200;
+
+// Typography
+$font-family-base:      'Livory', Georgia, 'Times New Roman', serif;
+$headings-font-family:  'Livory', Georgia, 'Times New Roman', serif;
+$headings-font-weight:  400;
+$headings-line-height:  1.15;
+$headings-color:        $crioco-cocoa-900;
+
+// Heading sizes — match Figma scale
+$h1-font-size: 52px;   // line-height: 52px, tracking: 0
+$h2-font-size: 32px;   // line-height: 40px, tracking: 10% — ALL CAPS
+$h3-font-size: 20px;   // line-height: 24px, tracking: 10% — ALL CAPS
+$h4-font-size: 24px;   // line-height: 28px, tracking: -2%
+$h5-font-size: 14px;   // line-height: 18px
+
+// Body text
+$font-size-base: 16px;   // Paragraph L
+$line-height-base: 1.5;  // 16px → 24px
+
+$small-font-size: 14px;  // Paragraph M/S
+
+// Spacing
+$spacer: 1rem;
+$border-radius:    4px;
+$border-radius-lg: 6px;
+$border-radius-sm: 2px;
+
+// Buttons
+$btn-font-family:       $font-family-base;
+$btn-font-size:         14px;
+$btn-font-weight:       400;
+$btn-padding-y:         12px;
+$btn-padding-x:         28px;
+$btn-border-radius:     0;   // square corners — premium/editorial feel
+$btn-letter-spacing:    0.08em;
+
+// Inputs
+$input-bg:              $crioco-cream-100;
+$input-border-color:    $crioco-cocoa-300;
+$input-focus-border-color: $crioco-cocoa-700;
+$input-color:           $crioco-cocoa-900;
+$input-border-radius:   0;
+
+// -----------------------------------------------------------------------------
+// CSS custom properties — available at runtime in QWeb templates and JS
+// -----------------------------------------------------------------------------
+:root {
+    // Color tokens
+    --crioco-cocoa-900: #{$crioco-cocoa-900};
+    --crioco-cocoa-700: #{$crioco-cocoa-700};
+    --crioco-cocoa-500: #{$crioco-cocoa-500};
+    --crioco-cocoa-300: #{$crioco-cocoa-300};
+    --crioco-cream-100: #{$crioco-cream-100};
+    --crioco-cream-200: #{$crioco-cream-200};
+    --crioco-gold-400:  #{$crioco-gold-400};
+    --crioco-gold-600:  #{$crioco-gold-600};
+
+    // Typography tokens — heading scale from Figma
+    --crioco-h1-size:    52px;
+    --crioco-h1-lh:      52px;
+    --crioco-h1-ls:      0em;
+
+    --crioco-h2-size:    32px;
+    --crioco-h2-lh:      40px;
+    --crioco-h2-ls:      0.10em;   // 10% Figma tracking
+
+    --crioco-h3-size:    20px;
+    --crioco-h3-lh:      24px;
+    --crioco-h3-ls:      0.10em;
+
+    --crioco-h4-size:    24px;
+    --crioco-h4-lh:      28px;
+    --crioco-h4-ls:      -0.02em;  // -2% Figma tracking
+
+    --crioco-h5-size:    14px;
+    --crioco-h5-lh:      18px;
+    --crioco-h5-ls:      0em;
+
+    // Mobile heading
+    --crioco-h1-mobile-size: 30px;
+    --crioco-h1-mobile-lh:   32px;
+
+    // Body text scale from Figma
+    --crioco-text-xl: 21px;  // Paragraph XL — deck / lead copy
+    --crioco-text-l:  16px;  // Paragraph L  — regular body
+    --crioco-text-m:  14px;  // Paragraph M  — secondary body
+    --crioco-text-s:  14px;  // Paragraph S  — small body
+    --crioco-text-xs: 12px;  // Paragraph XS — footnotes
+
+    // Overline
+    --crioco-overline-size: 14px;
+    --crioco-overline-lh:   20px;
+    --crioco-overline-ls:   0.8px;
+
+    // Layout
+    --crioco-navbar-h:  72px;
+    --crioco-gutter:    clamp(16px, 5vw, 80px);
+    --crioco-max-w:     1280px;
+}

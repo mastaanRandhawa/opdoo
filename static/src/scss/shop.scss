@@ -1,0 +1,711 @@
+// =============================================================================
+// CrioCo — Shop: listing page, product cards, product detail, variants, cart
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Shop listing page  /shop
+// -----------------------------------------------------------------------------
+
+.crioco-shop {
+
+    // ── Page header (injected by shop_templates.xml) ──────────────────────
+
+    .crioco-shop__header {
+        padding: 56px 0 32px;
+        border-bottom: 1px solid var(--crioco-cream-200);
+        margin-bottom: 40px;
+
+        .crioco-overline {
+            display: block;
+            margin-bottom: 8px;
+        }
+    }
+
+    .crioco-shop__title {
+        font-size: var(--crioco-h2-size);
+        line-height: var(--crioco-h2-lh);
+        letter-spacing: var(--crioco-h2-ls);
+        text-transform: uppercase;
+        color: var(--crioco-cocoa-900);
+        margin: 0;
+    }
+
+    // ── Sidebar filter ────────────────────────────────────────────────────
+
+    #left_column_products {
+        // Category filter heading
+        .h6, h6 {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.10em;
+            color: var(--crioco-gold-400);
+            font-weight: 400;
+            font-family: 'Livory', Georgia, serif;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--crioco-cream-200);
+        }
+
+        // Filter checkbox labels
+        .list-group-item,
+        .o_wsale_cat_filter_item {
+            border: none;
+            background: transparent;
+            padding: 6px 0;
+            font-size: var(--crioco-text-m);
+            color: var(--crioco-cocoa-700);
+            cursor: pointer;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            &:hover { color: var(--crioco-cocoa-900); }
+            &.active, &.o_active {
+                color: var(--crioco-cocoa-900);
+                font-weight: 600;
+            }
+        }
+
+        // Custom styled checkbox
+        input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            border: 1px solid var(--crioco-cocoa-500);
+            border-radius: 0;
+            accent-color: var(--crioco-cocoa-900);
+        }
+
+        // Price range slider
+        .js_price_range_slider {
+            accent-color: var(--crioco-gold-400);
+        }
+
+        // Attribute filter chips (size, weight)
+        .o_wsale_filter_products_attributes {
+            .o_wsale_attrib_filter_item {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid var(--crioco-cream-200);
+                background: transparent;
+                color: var(--crioco-cocoa-700);
+                font-size: 11px;
+                padding: 4px 10px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                margin: 2px;
+
+                &:hover {
+                    border-color: var(--crioco-cocoa-700);
+                    color: var(--crioco-cocoa-900);
+                }
+
+                &.active {
+                    background: var(--crioco-cocoa-900);
+                    border-color: var(--crioco-cocoa-900);
+                    color: var(--crioco-cream-100);
+                }
+            }
+        }
+    }
+
+    // ── Sort / results bar ────────────────────────────────────────────────
+
+    .o_wsale_products_searchbar_global {
+        margin-bottom: 24px;
+
+        .form-select,
+        select {
+            border: 1px solid var(--crioco-cream-200);
+            background-color: var(--crioco-cream-100);
+            color: var(--crioco-cocoa-900);
+            border-radius: 0;
+            font-size: var(--crioco-text-m);
+            font-family: 'Livory', Georgia, serif;
+
+            &:focus {
+                border-color: var(--crioco-cocoa-700);
+                box-shadow: none;
+            }
+        }
+    }
+
+    // ── Pagination ────────────────────────────────────────────────────────
+
+    .pagination {
+        gap: 4px;
+        justify-content: center;
+        margin-top: 48px;
+
+        .page-link {
+            border: 1px solid var(--crioco-cream-200);
+            color: var(--crioco-cocoa-700);
+            font-size: var(--crioco-text-m);
+            border-radius: 0;
+            padding: 8px 14px;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background: var(--crioco-cocoa-900);
+                border-color: var(--crioco-cocoa-900);
+                color: var(--crioco-cream-100);
+            }
+        }
+
+        .page-item.active .page-link {
+            background: var(--crioco-cocoa-900);
+            border-color: var(--crioco-cocoa-900);
+            color: var(--crioco-cream-100);
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Product card — shop grid  (.crioco-shop-card added via XPath)
+// The card coexists with Odoo's .o_wsale_product_grid_item and .card classes.
+// All rules here use .crioco-shop-card as the scoping selector so they win
+// cleanly over Bootstrap's .card defaults without !important.
+// -----------------------------------------------------------------------------
+
+.crioco-shop-card {
+    border: none;
+    border-radius: 0;
+    background: var(--crioco-cream-200);
+    transition: box-shadow 0.25s ease;
+    overflow: hidden;
+
+    &:hover {
+        box-shadow: 0 8px 32px rgba(44, 24, 16, 0.12);
+
+        .o_image_thumb,
+        .o_wsale_product_image_wrapper img {
+            transform: scale(1.04);
+        }
+    }
+
+    // ── Image area ────────────────────────────────────────────────────────
+
+    // Odoo wraps the product image in several possible containers
+    .o_image_thumb,
+    .o_wsale_product_image_wrapper,
+    .s_product_cover_image {
+        overflow: hidden;
+        aspect-ratio: 1 / 1;
+        display: block;
+        background: var(--crioco-cream-200);
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+    }
+
+    // ── Card body ─────────────────────────────────────────────────────────
+
+    .card-body {
+        padding: 16px 16px 8px;
+        background: var(--crioco-cream-200);
+    }
+
+    // Category overline (injected by XPath before .o_wsale_product_name)
+    .crioco-product-card__category {
+        font-size: var(--crioco-text-xs);
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+        color: var(--crioco-cocoa-500);
+        margin: 0 0 4px;
+        font-family: 'Livory', Georgia, serif;
+    }
+
+    // Product name
+    .o_wsale_product_name,
+    h5.card-title {
+        font-family: 'Livory', Georgia, serif;
+        font-size: var(--crioco-h5-size);
+        font-weight: 400;
+        color: var(--crioco-cocoa-900);
+        margin: 0 0 8px;
+        text-transform: none;
+        letter-spacing: 0;
+    }
+
+    // Price
+    .product_price,
+    .oe_currency_value {
+        font-size: var(--crioco-text-m);
+        color: var(--crioco-cocoa-700);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .o_wsale_product_price {
+        .oe_price { color: var(--crioco-cocoa-700); }
+        .o_wsale_product_price_list { // crossed-out original price
+            color: var(--crioco-cocoa-500);
+            font-size: var(--crioco-text-xs);
+        }
+    }
+
+    // ── Card footer / add-to-cart ─────────────────────────────────────────
+
+    .card-footer,
+    .o_wsale_product_btn {
+        border: none;
+        background: var(--crioco-cream-200);
+        padding: 8px 16px 16px;
+    }
+
+    // Override Bootstrap's .btn-primary with CrioCo primary button style
+    .o_wsale_product_btn .btn,
+    .o_wsale_product_btn .a-submit {
+        display: block;
+        width: 100%;
+        background-color: var(--crioco-cocoa-900);
+        border: 1px solid var(--crioco-cocoa-900);
+        color: var(--crioco-cream-100);
+        border-radius: 0;
+        font-family: 'Livory', Georgia, serif;
+        font-size: 11px;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 10px 16px;
+        transition: background-color 0.25s ease, color 0.25s ease,
+                    border-color 0.25s ease;
+
+        &:hover, &:focus {
+            background-color: var(--crioco-gold-400);
+            border-color: var(--crioco-gold-400);
+            color: var(--crioco-cocoa-900);
+        }
+    }
+
+    // Out-of-stock badge
+    .o_ribbon_right,
+    .badge.text-bg-danger {
+        background-color: var(--crioco-cocoa-900) !important;
+        color: var(--crioco-cream-100) !important;
+        border-radius: 0;
+        font-family: 'Livory', Georgia, serif;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    // Sale badge
+    .badge.text-bg-primary {
+        background-color: var(--crioco-gold-400) !important;
+        color: var(--crioco-cocoa-900) !important;
+        border-radius: 0;
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Product detail page  /shop/<slug>
+// -----------------------------------------------------------------------------
+
+.crioco-product-detail {
+    padding-bottom: 80px;
+
+    // ── Breadcrumb ────────────────────────────────────────────────────────
+
+    .breadcrumb {
+        background: transparent;
+        padding: 20px 0 0;
+        font-size: var(--crioco-text-xs);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        gap: 8px;
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '—';
+            color: var(--crioco-cocoa-300);
+        }
+
+        a {
+            color: var(--crioco-cocoa-500);
+            text-decoration: none;
+            &:hover { color: var(--crioco-cocoa-700); }
+        }
+
+        .active {
+            color: var(--crioco-cocoa-900);
+        }
+    }
+
+    // ── Main product block ────────────────────────────────────────────────
+
+    #product_detail_main {
+        padding-top: 40px;
+        gap: 0;
+    }
+
+    // ── Gallery column ────────────────────────────────────────────────────
+
+    .crioco-detail-gallery {
+        // Main image
+        .carousel-inner {
+            background: var(--crioco-cream-200);
+        }
+
+        .carousel-item img,
+        #o_main_product_carousel img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            display: block;
+        }
+
+        // Thumbnail strip
+        .o_carousel_product_nav {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+
+            a, button {
+                border: 2px solid transparent;
+                padding: 0;
+                transition: border-color 0.2s ease;
+                flex-shrink: 0;
+
+                &:hover, &.active {
+                    border-color: var(--crioco-cocoa-700);
+                }
+            }
+
+            img {
+                width: 64px;
+                height: 64px;
+                object-fit: cover;
+                display: block;
+            }
+        }
+    }
+
+    // ── Info column ───────────────────────────────────────────────────────
+
+    .crioco-detail-info {
+        padding-left: 56px;
+
+        @media (max-width: 991px) { padding-left: 0; padding-top: 32px; }
+
+        // Category overline
+        .crioco-detail-category {
+            margin-bottom: 8px;
+        }
+
+        // Product title
+        .product_name {
+            font-size: var(--crioco-h1-size);
+            line-height: var(--crioco-h1-lh);
+            letter-spacing: var(--crioco-h1-ls);
+            font-weight: 400;
+            color: var(--crioco-cocoa-900);
+            margin: 0 0 24px;
+
+            @media (max-width: 640px) {
+                font-size: var(--crioco-h1-mobile-size);
+                line-height: var(--crioco-h1-mobile-lh);
+            }
+        }
+
+        // Price block
+        .product_price_block,
+        .o_product_price {
+            margin-bottom: 28px;
+        }
+
+        .oe_price,
+        h4.css_editable_mode_hidden {
+            font-family: 'Livory', Georgia, serif;
+            font-size: 24px;
+            font-weight: 400;
+            color: var(--crioco-cocoa-700);
+            letter-spacing: -0.01em;
+            margin: 0;
+        }
+
+        // Crossed-out list price (sale items)
+        .o_product_price_list {
+            font-size: 16px;
+            color: var(--crioco-cocoa-300);
+            text-decoration: line-through;
+            margin-left: 8px;
+        }
+
+        // Short description
+        #product_description {
+            font-size: var(--crioco-text-l);
+            line-height: 1.75;
+            color: var(--crioco-cocoa-700);
+            margin-bottom: 28px;
+
+            p { margin: 0; }
+        }
+    }
+
+    // ── Variant selectors — styled as chips ───────────────────────────────
+
+    .js_add_cart_variants,
+    .product_attributes_simple {
+
+        .attribute_name,
+        label.form-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.10em;
+            color: var(--crioco-cocoa-500);
+            margin-bottom: 10px;
+            display: block;
+            font-family: 'Livory', Georgia, serif;
+        }
+
+        // Radio-button variant — hide the native input, style the label as chip
+        input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        input[type="radio"] + label,
+        .o_variant_pills label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 56px;
+            border: 1px solid var(--crioco-cream-200);
+            padding: 6px 14px;
+            font-size: 12px;
+            color: var(--crioco-cocoa-700);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Livory', Georgia, serif;
+            margin: 0 4px 4px 0;
+            user-select: none;
+
+            &:hover {
+                border-color: var(--crioco-cocoa-700);
+                color: var(--crioco-cocoa-900);
+            }
+        }
+
+        input[type="radio"]:checked + label,
+        input[type="radio"].active + label {
+            background: var(--crioco-cocoa-900);
+            border-color: var(--crioco-cocoa-900);
+            color: var(--crioco-cream-100);
+        }
+
+        // Out-of-stock variant chip
+        input[type="radio"]:disabled + label {
+            opacity: 0.4;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        // Select dropdown fallback (some attribute display types)
+        select.form-select {
+            border: 1px solid var(--crioco-cream-200);
+            border-radius: 0;
+            background-color: var(--crioco-cream-100);
+            color: var(--crioco-cocoa-900);
+            font-family: 'Livory', Georgia, serif;
+            font-size: 13px;
+            padding: 10px 14px;
+            max-width: 200px;
+
+            &:focus {
+                border-color: var(--crioco-cocoa-700);
+                box-shadow: none;
+            }
+        }
+    }
+
+    // ── Quantity picker ───────────────────────────────────────────────────
+
+    .js_quantity,
+    .css_quantity {
+        display: flex;
+        align-items: stretch;
+        border: 1px solid var(--crioco-cream-200);
+        width: fit-content;
+        margin-bottom: 20px;
+
+        .btn, button {
+            background: transparent;
+            border: none;
+            color: var(--crioco-cocoa-700);
+            padding: 0 14px;
+            font-size: 18px;
+            line-height: 1;
+            cursor: pointer;
+            transition: color 0.2s ease, background-color 0.2s ease;
+
+            &:hover {
+                background: var(--crioco-cream-200);
+                color: var(--crioco-cocoa-900);
+            }
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            border: none;
+            border-left: 1px solid var(--crioco-cream-200);
+            border-right: 1px solid var(--crioco-cream-200);
+            background: transparent;
+            text-align: center;
+            width: 56px;
+            font-family: 'Livory', Georgia, serif;
+            font-size: 14px;
+            color: var(--crioco-cocoa-900);
+            padding: 10px 0;
+            font-variant-numeric: tabular-nums;
+
+            // Remove browser spin arrows
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button { -webkit-appearance: none; }
+            -moz-appearance: textfield;
+
+            &:focus { outline: none; box-shadow: none; }
+        }
+    }
+
+    // ── Add to Cart button ────────────────────────────────────────────────
+
+    #add_to_cart,
+    .a-submit[type="submit"],
+    button.a-submit {
+        display: inline-block;
+        background-color: var(--crioco-cocoa-900);
+        border: 1px solid var(--crioco-cocoa-900);
+        color: var(--crioco-cream-100);
+        border-radius: 0;
+        font-family: 'Livory', Georgia, serif;
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 16px 40px;
+        cursor: pointer;
+        transition: background-color 0.25s ease, color 0.25s ease,
+                    border-color 0.25s ease;
+        text-decoration: none;
+
+        &:hover, &:focus {
+            background-color: var(--crioco-gold-400);
+            border-color: var(--crioco-gold-400);
+            color: var(--crioco-cocoa-900);
+        }
+
+        &:disabled, &.disabled {
+            background-color: var(--crioco-cocoa-300);
+            border-color: var(--crioco-cocoa-300);
+            cursor: not-allowed;
+        }
+    }
+
+    // ── Product description tabs (bottom of page) ─────────────────────────
+
+    #product_description_sold {
+        margin-top: 48px;
+        padding-top: 48px;
+        border-top: 1px solid var(--crioco-cream-200);
+
+        .nav-tabs {
+            border-bottom: 1px solid var(--crioco-cream-200);
+            gap: 0;
+
+            .nav-link {
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.10em;
+                color: var(--crioco-cocoa-500);
+                border: none;
+                border-bottom: 2px solid transparent;
+                padding: 10px 20px;
+                border-radius: 0;
+                transition: color 0.2s ease;
+
+                &:hover { color: var(--crioco-cocoa-900); }
+
+                &.active {
+                    color: var(--crioco-cocoa-900);
+                    border-bottom-color: var(--crioco-gold-400);
+                    background: transparent;
+                }
+            }
+        }
+
+        .tab-content {
+            padding: 24px 0;
+            font-size: var(--crioco-text-l);
+            line-height: 1.75;
+            color: var(--crioco-cocoa-700);
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Origin Notes section
+// Full-width strip between the product block and description tabs.
+// -----------------------------------------------------------------------------
+
+.crioco-origin-notes {
+    padding: 64px 0;
+    border-top: 1px solid var(--crioco-cream-200);
+    margin-top: 48px;
+
+    &__inner {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 64px;
+        align-items: start;
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+    }
+
+    &__label {
+        .crioco-overline { margin-bottom: 8px; display: block; }
+    }
+
+    &__title {
+        font-size: var(--crioco-h2-size);
+        line-height: var(--crioco-h2-lh);
+        letter-spacing: var(--crioco-h2-ls);
+        text-transform: uppercase;
+        color: var(--crioco-cocoa-900);
+        margin: 0;
+    }
+
+    &__body {
+        font-size: var(--crioco-text-xl);
+        line-height: 1.75;
+        color: var(--crioco-cocoa-700);
+        margin: 0;
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Related products  (Odoo injects these at the bottom of the detail page)
+// -----------------------------------------------------------------------------
+
+.o_wsale_suggested_products {
+    padding: 64px 0;
+    border-top: 1px solid var(--crioco-cream-200);
+
+    h2, .h2 {
+        font-size: var(--crioco-h2-size);
+        line-height: var(--crioco-h2-lh);
+        letter-spacing: var(--crioco-h2-ls);
+        text-transform: uppercase;
+        margin-bottom: 40px;
+    }
+}

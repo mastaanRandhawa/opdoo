@@ -1,0 +1,461 @@
+// =============================================================================
+// CrioCo — Layout: global typography, navbar, footer
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Global typography — apply Figma type scale across the site
+// -----------------------------------------------------------------------------
+
+h1 {
+    font-size: var(--crioco-h1-size);
+    line-height: var(--crioco-h1-lh);
+    letter-spacing: var(--crioco-h1-ls);
+    font-weight: 400;
+
+    @media (max-width: 640px) {
+        font-size: var(--crioco-h1-mobile-size);
+        line-height: var(--crioco-h1-mobile-lh);
+    }
+}
+
+// H2 and H3: ALL CAPS with wide tracking — Figma confirmed treatment
+h2 {
+    font-size: var(--crioco-h2-size);
+    line-height: var(--crioco-h2-lh);
+    letter-spacing: var(--crioco-h2-ls);
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+h3 {
+    font-size: var(--crioco-h3-size);
+    line-height: var(--crioco-h3-lh);
+    letter-spacing: var(--crioco-h3-ls);
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+// H4: tight negative tracking, mixed case
+h4 {
+    font-size: var(--crioco-h4-size);
+    line-height: var(--crioco-h4-lh);
+    letter-spacing: var(--crioco-h4-ls);
+    font-weight: 400;
+}
+
+h5 {
+    font-size: var(--crioco-h5-size);
+    line-height: var(--crioco-h5-lh);
+    font-weight: 400;
+}
+
+// Lead / deck copy
+.crioco-lead {
+    font-size: var(--crioco-text-xl);
+    line-height: 27px;
+}
+
+// Overline label — e.g. "CATEGORY" above a heading
+.crioco-overline {
+    font-size: var(--crioco-overline-size);
+    line-height: var(--crioco-overline-lh);
+    letter-spacing: var(--crioco-overline-ls);
+    text-transform: uppercase;
+    font-weight: 400;
+    color: var(--crioco-gold-400);
+}
+
+// Wordmark — used in navbar and footer
+.crioco-wordmark {
+    font-family: 'Livory', Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 0.04em;
+}
+
+// -----------------------------------------------------------------------------
+// Navbar
+// Odoo's header keeps id="top", class="navbar …". We add .crioco-navbar via
+// XPath and style entirely from here — no !important fights needed because
+// our variables.scss overrides Bootstrap's $primary etc. at compile time.
+// -----------------------------------------------------------------------------
+
+.crioco-navbar {
+    background-color: var(--crioco-cocoa-900);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid var(--crioco-cocoa-700);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+    // Elevated state when scrolled — added by main.js
+    &.is-scrolled {
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    // ── Logo / wordmark ─────────────────────────────────────────────────────
+
+    .crioco-brand {
+        padding: 0;
+        margin-right: 40px;
+    }
+
+    .crioco-wordmark {
+        font-size: 22px;
+        color: var(--crioco-cream-100);
+        text-decoration: none;
+        display: block;
+
+        &:hover {
+            color: var(--crioco-gold-400);
+        }
+    }
+
+    // ── Nav links ────────────────────────────────────────────────────────────
+
+    .navbar-nav .nav-link,
+    .navbar-nav .nav-link.active {
+        color: var(--crioco-cream-200);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.10em;
+        font-weight: 400;
+        padding: 8px 14px;
+        transition: color 0.2s ease;
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 14px;
+            right: 14px;
+            height: 1px;
+            background: var(--crioco-gold-400);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.25s ease;
+        }
+
+        &:hover,
+        &:focus {
+            color: var(--crioco-cream-100);
+
+            &::after {
+                transform: scaleX(1);
+            }
+        }
+    }
+
+    // Dropdown menus (if any menu items have children)
+    .dropdown-menu {
+        background-color: var(--crioco-cocoa-900);
+        border: 1px solid var(--crioco-cocoa-700);
+        border-radius: 0;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+        .dropdown-item {
+            color: var(--crioco-cream-200);
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 10px 20px;
+
+            &:hover,
+            &:focus {
+                background-color: var(--crioco-cocoa-700);
+                color: var(--crioco-cream-100);
+            }
+        }
+    }
+
+    // ── Cart icon (website_sale injects this) ────────────────────────────────
+
+    // Odoo 17 cart uses .o_wsale_my_cart or #cart_notification
+    .o_wsale_my_cart,
+    #cart_notification {
+        color: var(--crioco-cream-200);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: var(--crioco-cream-100);
+        }
+
+        // Cart item count badge
+        .badge,
+        .my_cart_quantity {
+            background-color: var(--crioco-gold-400);
+            color: var(--crioco-cocoa-900);
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            font-size: 10px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+    }
+
+    // ── Auth links (login / account) ─────────────────────────────────────────
+
+    .o_login_btn,
+    .o_account_btn,
+    .o_nav_portal {
+        color: var(--crioco-cream-200);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 8px 14px;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: var(--crioco-cream-100);
+            text-decoration: none;
+        }
+    }
+
+    // ── Mobile hamburger ─────────────────────────────────────────────────────
+
+    .navbar-toggler {
+        border: 1px solid var(--crioco-cocoa-500);
+        border-radius: 0;
+        padding: 6px 10px;
+
+        &:focus {
+            box-shadow: none;
+            border-color: var(--crioco-gold-400);
+        }
+    }
+
+    // Custom hamburger lines (replaces Bootstrap's SVG icon)
+    .crioco-toggler-icon {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 22px;
+
+        span {
+            display: block;
+            height: 1px;
+            background: var(--crioco-cream-100);
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+    }
+
+    // Animated hamburger → X on open
+    &.nav-open .crioco-toggler-icon {
+        span:first-child  { transform: translateY(6px) rotate(45deg); }
+        span:nth-child(2) { opacity: 0; }
+        span:last-child   { transform: translateY(-6px) rotate(-45deg); }
+    }
+
+    // ── Mobile expanded menu ─────────────────────────────────────────────────
+
+    @media (max-width: 991px) {
+        .navbar-collapse {
+            background-color: var(--crioco-cocoa-900);
+            padding: 16px 0 24px;
+            border-top: 1px solid var(--crioco-cocoa-700);
+            margin-top: 8px;
+        }
+
+        .navbar-nav {
+            gap: 4px;
+        }
+
+        .navbar-nav .nav-link {
+            padding: 12px 20px;
+
+            &::after {
+                display: none;
+            }
+        }
+    }
+}
+
+// Offset page content so sticky navbar doesn't overlap anchors
+body {
+    scroll-padding-top: var(--crioco-navbar-h);
+}
+
+// Remove Odoo's default o_header_standard min-height override
+.crioco-navbar.o_header_standard {
+    min-height: unset;
+}
+
+// -----------------------------------------------------------------------------
+// Footer
+// -----------------------------------------------------------------------------
+
+.crioco-footer {
+    background-color: var(--crioco-cocoa-900);
+    color: var(--crioco-cream-200);
+
+    .container {
+        max-width: var(--crioco-max-w);
+    }
+
+    // ── Three-column grid ─────────────────────────────────────────────────────
+
+    &__inner {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 48px;
+        padding: 64px 0 48px;
+        border-bottom: 1px solid var(--crioco-cocoa-700);
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr 1fr;
+            padding: 48px 0 32px;
+        }
+
+        @media (max-width: 480px) {
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+    }
+
+    // ── Brand column ──────────────────────────────────────────────────────────
+
+    &__logo {
+        font-size: 28px;
+        color: var(--crioco-cream-100);
+        text-decoration: none;
+        display: block;
+        margin-bottom: 16px;
+
+        &:hover {
+            color: var(--crioco-gold-400);
+        }
+    }
+
+    &__tagline {
+        font-size: var(--crioco-text-m);
+        color: var(--crioco-cocoa-300);
+        line-height: 1.6;
+        max-width: 220px;
+        margin: 0;
+    }
+
+    // ── Nav columns ───────────────────────────────────────────────────────────
+
+    &__nav-title {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: var(--crioco-overline-ls);
+        color: var(--crioco-gold-400);
+        margin: 0 0 20px;
+        font-weight: 400;
+    }
+
+    &__nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        a {
+            color: var(--crioco-cocoa-300);
+            text-decoration: none;
+            font-size: var(--crioco-text-m);
+            transition: color 0.2s ease;
+
+            &:hover {
+                color: var(--crioco-cream-100);
+            }
+        }
+    }
+
+    // ── Bottom bar ────────────────────────────────────────────────────────────
+
+    &__bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 24px 0;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    &__copy {
+        font-size: var(--crioco-text-xs);
+        color: var(--crioco-cocoa-500);
+        margin: 0;
+    }
+
+    &__legal {
+        display: flex;
+        gap: 20px;
+        margin: 0;
+
+        a {
+            font-size: var(--crioco-text-xs);
+            color: var(--crioco-cocoa-500);
+            text-decoration: none;
+            transition: color 0.2s ease;
+
+            &:hover {
+                color: var(--crioco-cream-200);
+            }
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Scroll fade-in animation — triggered by main.js IntersectionObserver
+// -----------------------------------------------------------------------------
+
+[data-crioco-fade] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+
+    @media (prefers-reduced-motion: reduce) {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+[data-crioco-fade].crioco-fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+// Staggered delay for sibling items (product cards, etc.)
+[data-crioco-fade]:nth-child(2) { transition-delay: 0.08s; }
+[data-crioco-fade]:nth-child(3) { transition-delay: 0.16s; }
+[data-crioco-fade]:nth-child(4) { transition-delay: 0.24s; }
+
+// -----------------------------------------------------------------------------
+// Page wrapper — global spacing applied to every Odoo website page
+// -----------------------------------------------------------------------------
+
+#wrapwrap {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    main {
+        flex: 1;
+    }
+}
+
+.o_editable,
+[data-oe-model] {
+    // Preserve Website Builder editability outline on editable regions
+    outline-offset: 2px;
+}
